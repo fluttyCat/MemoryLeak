@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/articlesFragment">
+    <fragment
+        android:id="@+id/articlesFragment"
+        android:name="com.baloot.app.ui.homePage.articlesPage.ArticlesFragment"
+        android:label="ArticlesFragment"
+        tools:layout="@layout/fragment_articles">
+        <action
+            android:id="@+id/action_articlesFragment_to_articlesDetailFragment"
+            app:destination="@id/articlesDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/articlesDetailFragment"
+        android:name="com.baloot.app.ui.homePage.articleDetails.ArticlesDetailFragment"
+        android:label="ArticlesDetailFragment"
+        tools:layout="@layout/fragment_article_detail">
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="description"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="published"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="url"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="source"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.baloot.app.ui.homePage.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile" />
+</navigation>
