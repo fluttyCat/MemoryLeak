@@ -6,7 +6,7 @@
     app:startDestination="@id/splashFragment">
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.baloot.app.ui.splashPage.splashFragment.SplashFragment"
+        android:name="com.parisa.app.ui.splashPage.splashFragment.SplashFragment"
         android:label="SplashFragment"
         tools:layout="@layout/fragment_splash" />
 </navigation>

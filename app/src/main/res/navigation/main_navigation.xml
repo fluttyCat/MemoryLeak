@@ -5,7 +5,7 @@
     app:startDestination="@id/articlesFragment">
     <fragment
         android:id="@+id/articlesFragment"
-        android:name="com.baloot.app.ui.homePage.articlesPage.ArticlesFragment"
+        android:name="com.parisa.app.ui.homePage.articlesPage.ArticlesFragment"
         android:label="ArticlesFragment"
         tools:layout="@layout/fragment_articles">
         <action
@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/articlesDetailFragment"
-        android:name="com.baloot.app.ui.homePage.articleDetails.ArticlesDetailFragment"
+        android:name="com.parisa.app.ui.homePage.articleDetails.ArticlesDetailFragment"
         android:label="ArticlesDetailFragment"
         tools:layout="@layout/fragment_article_detail">
         <argument
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.baloot.app.ui.homePage.profile.ProfileFragment"
+        android:name="com.parisa.app.ui.homePage.profile.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/fragment_profile" />
 </navigation>
