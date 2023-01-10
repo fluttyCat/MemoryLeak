@@ -17,6 +17,7 @@ import com.baloot.app.ui.homePage.articlesPage.viewModel.ArticleViewModelImpl
 import com.baloot.app.util.Constants.ALIAS
 import com.baloot.app.util.Constants.ANDROID_KEY_STORE
 import com.baloot.app.util.Constants.TRANSFORMATION
+import com.baloot.app.util.Cryptography
 import com.core.base.ParentFragment
 import com.core.repository.HomeRepository
 import com.core.repository.LocalRepository
@@ -42,9 +43,13 @@ class CryptoGraphFragment : ParentFragment<ArticleViewModel, FragmentCryptograph
 
     lateinit var encryptedPairData: Pair<ByteArray, ByteArray>
 
+    private lateinit var cryp: Cryptography
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        getKeyGenerator()
+        //getKeyGenerator()
+
+        cryp = Cryptography(requireContext())
 
         dataBinding.encBtn.setOnClickListener(this)
         dataBinding.decBtn.setOnClickListener(this)
@@ -133,8 +138,14 @@ class CryptoGraphFragment : ParentFragment<ArticleViewModel, FragmentCryptograph
 
     override fun onClick(v: View?) {
         when (v) {
-            dataBinding.encBtn -> encryptText()
-            dataBinding.decBtn -> decryptText()
+               dataBinding.encBtn -> encryptText()
+               dataBinding.decBtn -> decryptText()
+//            dataBinding.encBtn -> {
+//                dataBinding.encTextTv.text = cryp.encryptData(dataBinding.encEt.text.toString())
+//            }
+//            dataBinding.decBtn -> {
+//                dataBinding.decTextTv.text = cryp.decryptData(dataBinding.encTextTv.text.toString())
+//            }
         }
     }
 
