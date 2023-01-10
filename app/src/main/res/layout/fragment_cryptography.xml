@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp">
+
+
+        <EditText
+            android:id="@+id/encEt"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/enter_text_to_encrypt"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/encDecTextTv"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:hint="your text is :"
+            android:textAlignment="textStart"
+            android:padding="4dp"
+            app:layout_constraintEnd_toEndOf="@+id/encEt"
+            app:layout_constraintStart_toStartOf="@+id/encEt"
+            app:layout_constraintTop_toBottomOf="@+id/encEt" />
+
+        <Button
+            android:id="@+id/encBtn"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/blue"
+            android:text="@string/encrypt_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/encDecTextTv" />
+
+        <Button
+            android:id="@+id/decBtn"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:background="@color/blue"
+            android:text="@string/decrypt_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/encBtn" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

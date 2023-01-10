@@ -2,10 +2,8 @@ package com.baloot.app.ui.splashPage.splashFragment
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.os.Handler
-import android.provider.Settings
 import android.view.WindowManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -16,15 +14,12 @@ import com.baloot.app.di.DaggerAppComponent
 import com.baloot.app.ui.homePage.main.MainActivity
 import com.baloot.app.ui.splashPage.splashFragment.viewModel.SplashViewModel
 import com.baloot.app.ui.splashPage.splashFragment.viewModel.SplashViewModelImpl
-import com.baloot.app.util.RootUtil.isDeviceRooted
 import com.core.base.ParentFragment
 import com.core.repository.HomeRepository
 import com.core.repository.LocalRepository
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.system.exitProcess
 
 
 class SplashFragment : ParentFragment<SplashViewModel, FragmentSplashBinding>() {
@@ -38,19 +33,22 @@ class SplashFragment : ParentFragment<SplashViewModel, FragmentSplashBinding>() 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val isDebug = requireContext().applicationInfo.flags and
+        /*val isDebug = requireContext().applicationInfo.flags and
                 ApplicationInfo.FLAG_DEBUGGABLE != 0
+*/
+        navigateToHomeActivity()
 
-        if (!isDeviceRooted) {
-            navigateToHomeActivity()
-        }
-        /*if (isDebug) {
-            testDebugMode()
-        }*/
 
-        if(Settings.Secure.getInt(requireActivity().contentResolver, Settings.Secure.ADB_ENABLED, 0) == 1) {
-            testDebugMode()
-        }
+        /* if (!isDeviceRooted) {
+             navigateToHomeActivity()
+         }
+          if (isDebug) {
+              testDebugMode()
+          }
+
+          if(Settings.Secure.getInt(requireActivity().contentResolver, Settings.Secure.ADB_ENABLED, 0) == 1) {
+              testDebugMode()
+          }*/
     }
 
     private fun navigateToHomeActivity() {
@@ -77,7 +75,7 @@ class SplashFragment : ParentFragment<SplashViewModel, FragmentSplashBinding>() 
         Handler().postDelayed({
             requireActivity().finish()
             System.exit(0)
-        },2000)
+        }, 2000)
 
 
     }

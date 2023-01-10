@@ -3,6 +3,7 @@ package com.baloot.app.di
 import android.app.Application
 import com.baloot.app.ui.homePage.articleDetails.ArticlesDetailFragment
 import com.baloot.app.ui.homePage.articlesPage.ArticlesFragment
+import com.baloot.app.ui.homePage.crypthography.CryptoGraphFragment
 import com.baloot.app.ui.homePage.main.MainActivity
 import com.baloot.app.ui.homePage.profile.ProfileFragment
 import com.baloot.app.ui.homePage.profile.bottomSheet.BottomSheetDialogFragment
@@ -29,6 +30,7 @@ interface AppComponent {
     fun inject(app: ArticlesFragment)
     fun inject(app: ArticlesDetailFragment)
     fun inject(app: ProfileFragment)
+    fun inject(app: CryptoGraphFragment)
 
     //bottom sheet
     fun inject(app: BottomSheetDialogFragment)

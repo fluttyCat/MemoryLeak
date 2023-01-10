@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/articlesFragment">
+    app:startDestination="@id/cryptoFragment">
     <fragment
         android:id="@+id/articlesFragment"
         android:name="com.baloot.app.ui.homePage.articlesPage.ArticlesFragment"
@@ -43,4 +43,10 @@
         android:name="com.baloot.app.ui.homePage.profile.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/cryptoFragment"
+        android:name="com.baloot.app.ui.homePage.crypthography.CryptoGraphFragment"
+        android:label="CryptoFragment"
+        tools:layout="@layout/fragment_cryptography"
+        />
 </navigation>
