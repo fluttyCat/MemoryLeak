@@ -15,6 +15,7 @@ class Encrypt {
     private var encryption: ByteArray? = null
     private var iv: ByteArray? = null
 
+
     @Throws(
         UnrecoverableEntryException::class,
         NoSuchAlgorithmException::class,
@@ -29,11 +30,13 @@ class Encrypt {
         IllegalBlockSizeException::class
     )
     fun encryptText(alias: String, textToEncrypt: String): ByteArray? {
-        val cipher = Cipher.getInstance(Constants.TRANSFORMATION)
-        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(alias))
-        iv = cipher.iv
-        //Do we save this encryption in app preference ?
-        return cipher.doFinal(textToEncrypt.toByteArray(charset("UTF-8"))).also { encryption = it }
+
+        val cipher = Cipher.getInstance("AES/CBC/PKCS7Padding")
+        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(alias = alias))
+
+        val _iv: ByteArray = cipher.iv
+        val encryptedData = cipher.doFinal(textToEncrypt.toByteArray(Charsets.UTF_8))
+        return encryptedData
     }
 
 
@@ -51,4 +54,21 @@ class Encrypt {
         )
         return keyGenerator.generateKey()
     }
+
+    fun getEncryption(): ByteArray? {
+        return encryption
+    }
+
+    fun getIv(): ByteArray? {
+        return iv
+    }
+
 }
+
+/*
+*
+*
+*    /* val cipher = Cipher.getInstance(TRANSFORMATION)
+        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(alias!!))
+        iv = cipher.iv
+        return cipher.doFinal(textToEncrypt.toByteArray(charset("UTF-8"))).also { encryption = it }*/*/

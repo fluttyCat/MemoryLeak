@@ -3,7 +3,8 @@ package com.baloot.app.ui.homePage.crypthography
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
@@ -14,16 +15,15 @@ import com.baloot.app.di.DaggerAppComponent
 import com.baloot.app.ui.homePage.articlesPage.viewModel.ArticleViewModel
 import com.baloot.app.ui.homePage.articlesPage.viewModel.ArticleViewModelImpl
 import com.baloot.app.util.Constants.ALIAS
-import com.baloot.app.util.Encrypt
+import com.baloot.app.util.Constants.ANDROID_KEY_STORE
+import com.baloot.app.util.Constants.TRANSFORMATION
 import com.core.base.ParentFragment
 import com.core.repository.HomeRepository
 import com.core.repository.LocalRepository
 import kotlinx.android.synthetic.main.fragment_cryptography.*
-import java.io.IOException
 import java.security.*
-import javax.crypto.BadPaddingException
-import javax.crypto.IllegalBlockSizeException
-import javax.crypto.NoSuchPaddingException
+import javax.crypto.*
+import javax.crypto.spec.IvParameterSpec
 import javax.inject.Inject
 
 
@@ -40,50 +40,70 @@ class CryptoGraphFragment : ParentFragment<ArticleViewModel, FragmentCryptograph
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
-    private lateinit var encrypt: Encrypt
-
+    lateinit var encryptedPairData: Pair<ByteArray, ByteArray>
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        getKeyGenerator()
 
         dataBinding.encBtn.setOnClickListener(this)
+        dataBinding.decBtn.setOnClickListener(this)
     }
 
-
     private fun encryptText() {
+        dataBinding.encTextTv.text = encryptWithKeyStore(dataBinding.encEt.text.toString())
+    }
 
-        val text = dataBinding.encEt.text.toString()
-        Log.d("text", "Encrypted Text:$text")
+    private fun decryptText() {
+        val iv = encryptedPairData.first
+        val encryptedData = encryptedPairData.second
+        dataBinding.decTextTv.text = decryptData(iv, encryptedData)
+    }
 
-        try {
-            encrypt = Encrypt()
-            val encryptedText: ByteArray? =
-                encrypt.encryptText(alias = ALIAS, textToEncrypt = text)
-            Log.d("s@urac", "Encrypted Text:$encryptedText")
+    private fun encryptWithKeyStore(plainText: String): String {
+        encryptedPairData = getEncryptedDataPair(plainText)
+        return encryptedPairData.second.toString(Charsets.UTF_8)
 
-        } catch (e: InvalidAlgorithmParameterException) {
-            e.printStackTrace()
-        } catch (e: SignatureException) {
-            e.printStackTrace()
-        } catch (e: IllegalBlockSizeException) {
-            e.printStackTrace()
-        } catch (e: BadPaddingException) {
-            e.printStackTrace()
-        } catch (e: UnrecoverableEntryException) {
-            e.printStackTrace()
-        } catch (e: InvalidKeyException) {
-            e.printStackTrace()
-        } catch (e: NoSuchPaddingException) {
-            e.printStackTrace()
-        } catch (e: NoSuchProviderException) {
-            e.printStackTrace()
-        } catch (e: NoSuchAlgorithmException) {
-            e.printStackTrace()
-        } catch (e: KeyStoreException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+    }
+
+    private fun getKeyGenerator() {
+        val keyGenerator =
+            KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
+        val keyGeneratorSpec = KeyGenParameterSpec.Builder(
+            ALIAS,
+            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+        )
+            .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
+            .setUserAuthenticationRequired(false)
+            .build()
+        keyGenerator.init(keyGeneratorSpec)
+        keyGenerator.generateKey()
+    }
+
+    private fun getKey(): SecretKey {
+        val keyStore = KeyStore.getInstance(ANDROID_KEY_STORE)
+        keyStore.load(null)
+        val secreteKeyEntry: KeyStore.SecretKeyEntry =
+            keyStore.getEntry(ALIAS, null) as KeyStore.SecretKeyEntry
+        return secreteKeyEntry.secretKey
+    }
+
+    private fun getEncryptedDataPair(data: String): Pair<ByteArray, ByteArray> {
+        val cipher = Cipher.getInstance(TRANSFORMATION)
+        cipher.init(Cipher.ENCRYPT_MODE, getKey())
+
+        val _iv: ByteArray = cipher.iv
+        val encryptedData = cipher.doFinal(data.toByteArray(Charsets.UTF_8))
+        return Pair(_iv, encryptedData)
+    }
+
+    private fun decryptData(iv: ByteArray, encData: ByteArray): String {
+        val cipher = Cipher.getInstance(TRANSFORMATION)
+        val keySpec = IvParameterSpec(iv)
+        cipher.init(Cipher.DECRYPT_MODE, getKey(), keySpec)
+        return cipher.doFinal(encData).toString(Charsets.UTF_8)
+
     }
 
 
@@ -114,7 +134,87 @@ class CryptoGraphFragment : ParentFragment<ArticleViewModel, FragmentCryptograph
     override fun onClick(v: View?) {
         when (v) {
             dataBinding.encBtn -> encryptText()
+            dataBinding.decBtn -> decryptText()
         }
     }
 
 }
+
+
+/*    private fun encryptText() {
+
+        val text = dataBinding.encEt.text.toString()
+        Log.d("text", "Encrypted Text:$text")
+
+        try {
+            encrypt = Encrypt()
+            val encryptedText: ByteArray? =
+                encrypt.encryptText(alias = ALIAS, textToEncrypt = text)
+            Log.d("s@urac", "Encrypted Text:$encryptedText")
+
+            dataBinding.encTextTv.text = encryptedText.toString()
+
+
+        } catch (e: InvalidAlgorithmParameterException) {
+            e.printStackTrace()
+        } catch (e: SignatureException) {
+            e.printStackTrace()
+        } catch (e: IllegalBlockSizeException) {
+            e.printStackTrace()
+        } catch (e: BadPaddingException) {
+            e.printStackTrace()
+        } catch (e: UnrecoverableEntryException) {
+            e.printStackTrace()
+        } catch (e: InvalidKeyException) {
+            e.printStackTrace()
+        } catch (e: NoSuchPaddingException) {
+            e.printStackTrace()
+        } catch (e: NoSuchProviderException) {
+            e.printStackTrace()
+        } catch (e: NoSuchAlgorithmException) {
+            e.printStackTrace()
+        } catch (e: KeyStoreException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun decryptText() {
+
+        try {
+
+            decrypt = Decrypt()
+            encrypt = Encrypt()
+
+
+            val decryptedText = decrypt.decryptData(
+                alias = ALIAS,
+                encryptedData = encrypt.getEncryption(),
+                encryptionIv = encrypt.getIv()
+            )
+
+            Log.d(
+                "s@urac",
+                "s@urac Decrypted data is:$decryptedText"
+            )
+
+            dataBinding.decTextTv.text = decryptedText
+
+        } catch (e: UnrecoverableEntryException) {
+        } catch (e: NoSuchAlgorithmException) {
+        } catch (e: KeyStoreException) {
+        } catch (e: NoSuchPaddingException) {
+        } catch (e: NoSuchProviderException) {
+        } catch (e: IOException) {
+        } catch (e: InvalidKeyException) {
+        } catch (e: IllegalBlockSizeException) {
+            e.printStackTrace()
+        } catch (e: BadPaddingException) {
+            e.printStackTrace()
+        } catch (e: InvalidAlgorithmParameterException) {
+            e.printStackTrace()
+        }
+
+
+    }*/

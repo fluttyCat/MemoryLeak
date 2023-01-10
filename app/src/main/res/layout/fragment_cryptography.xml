@@ -20,35 +20,49 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
         <TextView
-            android:id="@+id/encDecTextTv"
+            android:id="@+id/encTextTv"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:textSize="20sp"
-            android:hint="your text is :"
+            android:hint="encrypted text is :"
             android:textAlignment="textStart"
             android:padding="4dp"
             app:layout_constraintEnd_toEndOf="@+id/encEt"
             app:layout_constraintStart_toStartOf="@+id/encEt"
             app:layout_constraintTop_toBottomOf="@+id/encEt" />
 
+
+        <TextView
+            android:id="@+id/decTextTv"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="decrypted text is :"
+            android:padding="4dp"
+            android:textAlignment="textStart"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="@+id/encEt"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/encEt"
+            app:layout_constraintTop_toBottomOf="@+id/encTextTv" />
+
         <Button
             android:id="@+id/encBtn"
             android:layout_width="0dp"
             android:layout_height="30dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/blue"
+            android:background="#8ED53C"
             android:text="@string/encrypt_btn"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/encDecTextTv" />
+            app:layout_constraintTop_toBottomOf="@+id/decTextTv" />
 
         <Button
             android:id="@+id/decBtn"
             android:layout_width="0dp"
             android:layout_height="30dp"
-            android:background="@color/blue"
+            android:background="#8ED53C"
             android:text="@string/decrypt_btn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/encBtn" />
