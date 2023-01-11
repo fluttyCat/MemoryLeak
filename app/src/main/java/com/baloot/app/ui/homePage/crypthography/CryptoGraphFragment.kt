@@ -48,16 +48,37 @@ class CryptoGraphFragment : ParentFragment<CryptographyViewModel, FragmentCrypto
     }
 
 
-    /*
-    Mr bayat Code
     private fun encryptText() {
-         dataBinding.encTextTv.text = cryp.encryptData(dataBinding.encEt.text.toString())
-         dataBinding.decBtn.isEnabled = true
-     }
 
-     private fun decryptText() {
-         dataBinding.decTextTv.text = cryp.decryptData(dataBinding.encTextTv.text.toString())
-     }*/
+        if (!preferences.shredPrefHasKey(key)) {
+            val encryptedText = cryp.encryptData(dataBinding.encEt.text.toString())
+            dataBinding.encTextTv.text = encryptedText
+            dataBinding.decBtn.isEnabled = true
+
+            preferences.put(key, encryptedText)
+            dataBinding.decTextTv.text = cryp.decryptData(encryptedText)
+            dataBinding.encEt.text.clear()
+
+        } else {
+
+            val encText = preferences.getString(key)
+            val decText = cryp.decryptData(encText)
+            dataBinding.decTextTv.text = decText
+            viewModel.decryptedText = decText
+
+            preferences.put(key, viewModel.decryptedText + "# ${dataBinding.encEt.text}")
+            dataBinding.encEt.text.clear()
+            dataBinding.decTextTv.text = preferences.getString(key)
+            //cryp.encryptData(preferences.getString(key))
+
+        }
+
+
+    }
+
+    private fun decryptText() {
+        dataBinding.decTextTv.text = cryp.decryptData(dataBinding.encTextTv.text.toString())
+    }
 
 
     private fun putEncString() {
@@ -112,10 +133,10 @@ class CryptoGraphFragment : ParentFragment<CryptographyViewModel, FragmentCrypto
 
     override fun onClick(v: View?) {
         when (v) {
-            dataBinding.encBtn -> putEncString()
-            // encryptText()
-            dataBinding.decBtn -> getDecString()
-            //decryptText()
+            dataBinding.encBtn -> encryptText()
+            // putEncString()
+            dataBinding.decBtn -> decryptText()
+            //getDecString()
         }
     }
 
