@@ -21,6 +21,7 @@ class CryptographyViewModelImpl(
     application
 ) {
 
+    override var decryptedText: String = ""
 
     override fun getNetworkStatus(): LiveData<NetworkState> =
         MediatorLiveData<NetworkState>().apply {

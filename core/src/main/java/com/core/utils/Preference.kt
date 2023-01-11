@@ -19,19 +19,25 @@ interface Preference {
     fun getInt(key: String): Int
 
     fun getDecryptedString(key: String): String
+
+    fun shredPrefHasKey(key: String): Boolean
 }
 
 class PreferenceImpl(
-        application: Application,
-        private val securityHelper: SecurityHelper
+    application: Application,
+    private val securityHelper: SecurityHelper
 ) : Preference {
 
-    private val stringValues : HashMap<String, String> = hashMapOf()
-    private val longValues   : HashMap<String, Long> = hashMapOf()
-    private val intValues    : HashMap<String, Int> = hashMapOf()
+    private val stringValues: HashMap<String, String> = hashMapOf()
+    private val longValues: HashMap<String, Long> = hashMapOf()
+    private val intValues: HashMap<String, Int> = hashMapOf()
     private val booleanValues: HashMap<String, Boolean> = hashMapOf()
 
     var preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(application)
+
+    override fun shredPrefHasKey(key: String): Boolean {
+        return preferences.contains(key)
+    }
 
     override fun put(key: String, value: String) {
         synchronized(this) {

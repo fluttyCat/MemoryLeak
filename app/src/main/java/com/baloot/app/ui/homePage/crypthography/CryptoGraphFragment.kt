@@ -1,10 +1,7 @@
 package com.baloot.app.ui.homePage.crypthography
 
-import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.baloot.app.R
@@ -12,17 +9,19 @@ import com.baloot.app.databinding.FragmentCryptographyBinding
 import com.baloot.app.di.DaggerAppComponent
 import com.baloot.app.ui.homePage.crypthography.viewModel.CryptographyViewModel
 import com.baloot.app.ui.homePage.crypthography.viewModel.CryptographyViewModelImpl
+import com.baloot.app.util.Constants.key
 import com.baloot.app.util.Cryptography
 import com.core.base.ParentFragment
 import com.core.repository.HomeRepository
 import com.core.repository.LocalRepository
+import com.core.utils.Preference
+import com.core.utils.SecurityHelper
 import kotlinx.android.synthetic.main.fragment_cryptography.*
 import java.security.*
 import javax.crypto.*
 import javax.inject.Inject
 
 
-@RequiresApi(Build.VERSION_CODES.M)
 class CryptoGraphFragment : ParentFragment<CryptographyViewModel, FragmentCryptographyBinding>(),
     View.OnClickListener {
 
@@ -33,30 +32,58 @@ class CryptoGraphFragment : ParentFragment<CryptographyViewModel, FragmentCrypto
     lateinit var homeRepository: HomeRepository
 
     @Inject
-    lateinit var sharedPreferences: SharedPreferences
+    lateinit var preferences: Preference
 
-    lateinit var encryptedPairData: Pair<ByteArray, ByteArray>
+    @Inject
+    lateinit var securityHelper: SecurityHelper
+
 
     private lateinit var cryp: Cryptography
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        //getKeyGenerator()
 
+        clickListeners()
         cryp = Cryptography(requireContext())
-
-        dataBinding.encBtn.setOnClickListener(this)
-        dataBinding.decBtn.setOnClickListener(this)
     }
 
+
+    /*
+    Mr bayat Code
     private fun encryptText() {
-        dataBinding.encTextTv.text = cryp.encryptData(dataBinding.encEt.text.toString())
-        dataBinding.decBtn.isEnabled = true
+         dataBinding.encTextTv.text = cryp.encryptData(dataBinding.encEt.text.toString())
+         dataBinding.decBtn.isEnabled = true
+     }
+
+     private fun decryptText() {
+         dataBinding.decTextTv.text = cryp.decryptData(dataBinding.encTextTv.text.toString())
+     }*/
+
+
+    private fun putEncString() {
+
+        if (!preferences.shredPrefHasKey(key)) {
+
+            preferences.putEncrypt(key, dataBinding.encEt.text.toString())
+            dataBinding.decTextTv.text = preferences.getDecryptedString(key)
+            dataBinding.encEt.text.clear()
+
+        } else {
+            val decText = preferences.getDecryptedString(key)
+            viewModel.decryptedText = decText
+            dataBinding.decTextTv.text = decText
+            preferences.putEncrypt(key, viewModel.decryptedText + "# ${dataBinding.encEt.text}")
+            dataBinding.encEt.text.clear()
+            dataBinding.decTextTv.text = preferences.getDecryptedString(key)
+
+        }
+
     }
 
-    private fun decryptText() {
-        dataBinding.decTextTv.text = cryp.decryptData(dataBinding.encTextTv.text.toString())
+    private fun getDecString() {
+        dataBinding.decTextTv.text = preferences.getDecryptedString(key = key)
     }
+
 
     override fun getViewModelClass(): Class<CryptographyViewModel> =
         CryptographyViewModel::class.java
@@ -85,9 +112,16 @@ class CryptoGraphFragment : ParentFragment<CryptographyViewModel, FragmentCrypto
 
     override fun onClick(v: View?) {
         when (v) {
-            dataBinding.encBtn -> encryptText()
-            dataBinding.decBtn -> decryptText()
+            dataBinding.encBtn -> putEncString()
+            // encryptText()
+            dataBinding.decBtn -> getDecString()
+            //decryptText()
         }
+    }
+
+    private fun clickListeners() {
+        dataBinding.encBtn.setOnClickListener(this)
+        dataBinding.decBtn.setOnClickListener(this)
     }
 
 }

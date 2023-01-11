@@ -10,5 +10,5 @@ import kotlinx.coroutines.flow.Flow
 abstract class CryptographyViewModel(application: Application) : BaseViewModel(application) {
 
     abstract fun getArticleData(): Flow<PagingData<ArticleDto>>
-
+    abstract var decryptedText: String
 }
