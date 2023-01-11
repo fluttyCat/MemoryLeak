@@ -35,7 +35,7 @@ class MainActivity : ParentActivity<MainViewModel, ActivityMainBinding>() {
 
         navController = host.navController
 
-        dataBinding.bottomNavigation.setupWithNavController(navController)
+        //dataBinding.bottomNavigation.setupWithNavController(navController)
 
     }
 

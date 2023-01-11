@@ -25,6 +25,7 @@
     <color name="red">#DB0100</color>
     <color name="red_opacity">#80DB0100</color>
     <color name="green">#4caf50</color>
+    <color name="greenPrimary">#3B953F</color>
     <color name="black">#000000</color>
 
 </resources>
