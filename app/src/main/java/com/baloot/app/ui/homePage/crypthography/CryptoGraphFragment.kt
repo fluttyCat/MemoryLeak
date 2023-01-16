@@ -66,10 +66,12 @@ class CryptoGraphFragment : ParentFragment<CryptographyViewModel, FragmentCrypto
             dataBinding.decTextTv.text = decText
             viewModel.decryptedText = decText
 
-            preferences.put(key, viewModel.decryptedText + "# ${dataBinding.encEt.text}")
+
+            /*preferences.put(key, viewModel.decryptedText + "# ${dataBinding.encEt.text}")*/
+            dataBinding.decTextTv.text = viewModel.decryptedText + "# ${dataBinding.encEt.text}"
             dataBinding.encEt.text.clear()
-            dataBinding.decTextTv.text = preferences.getString(key)
-            //cryp.encryptData(preferences.getString(key))
+            val newEncText = cryp.encryptData(dataBinding.decTextTv.text.toString())
+            preferences.put(key,newEncText)
 
         }
 
